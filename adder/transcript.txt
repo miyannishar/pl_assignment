@@ -1,0 +1,208 @@
+=== test/37.snek ===
+--- Source ---
+37
+--- Compile ---
+cargo run -- test/37.snek test/37.s
+   Compiling sexp v1.1.4
+   Compiling adder v0.1.0 (/Users/nisharmiya/MyComputer/Programming/pl_assignment/adder)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.01s
+     Running `target/debug/adder test/37.snek test/37.s`
+nasm -f macho64 test/37.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/37.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 37
+  ret
+--- Output ---
+37
+
+=== test/add_sub.snek ===
+--- Source ---
+(add1 (sub1 5))
+--- Compile ---
+cargo run -- test/add_sub.snek test/add_sub.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/add_sub.snek test/add_sub.s`
+nasm -f macho64 test/add_sub.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/add_sub.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 5
+  sub rax, 1
+  add rax, 1
+  ret
+--- Output ---
+5
+
+=== test/add.snek ===
+--- Source ---
+(add1 (add1 5))
+--- Compile ---
+cargo run -- test/add.snek test/add.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/add.snek test/add.s`
+nasm -f macho64 test/add.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/add.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 5
+  add rax, 1
+  add rax, 1
+  ret
+--- Output ---
+7
+
+=== test/complex.snek ===
+--- Source ---
+(sub1 (sub1 (add1 73)))
+--- Compile ---
+cargo run -- test/complex.snek test/complex.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/complex.snek test/complex.s`
+nasm -f macho64 test/complex.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/complex.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 73
+  add rax, 1
+  sub rax, 1
+  sub rax, 1
+  ret
+--- Output ---
+72
+
+=== test/negate_negate.snek ===
+--- Source ---
+(negate (negate 7))
+--- Compile ---
+cargo run -- test/negate_negate.snek test/negate_negate.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/negate_negate.snek test/negate_negate.s`
+nasm -f macho64 test/negate_negate.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/negate_negate.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 7
+  neg rax
+  neg rax
+  ret
+--- Output ---
+7
+
+=== test/negate.snek ===
+--- Source ---
+(negate (add1 3))
+--- Compile ---
+cargo run -- test/negate.snek test/negate.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/negate.snek test/negate.s`
+nasm -f macho64 test/negate.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/negate.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 3
+  add rax, 1
+  neg rax
+  ret
+--- Output ---
+-4
+
+=== test/negative.snek ===
+--- Source ---
+-5
+--- Compile ---
+cargo run -- test/negative.snek test/negative.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/negative.snek test/negative.s`
+nasm -f macho64 test/negative.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/negative.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, -5
+  ret
+--- Output ---
+-5
+
+=== test/nested.snek ===
+--- Source ---
+(negate (add1 (sub1 (add1 10))))
+--- Compile ---
+cargo run -- test/nested.snek test/nested.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/nested.snek test/nested.s`
+nasm -f macho64 test/nested.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/nested.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 10
+  add rax, 1
+  sub rax, 1
+  add rax, 1
+  neg rax
+  ret
+--- Output ---
+-11
+
+=== test/sub.snek ===
+--- Source ---
+(sub1 10)
+--- Compile ---
+cargo run -- test/sub.snek test/sub.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/sub.snek test/sub.s`
+nasm -f macho64 test/sub.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/sub.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 10
+  sub rax, 1
+  ret
+--- Output ---
+9
+
+=== test/zero.snek ===
+--- Source ---
+0
+--- Compile ---
+cargo run -- test/zero.snek test/zero.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/adder test/zero.snek test/zero.s`
+nasm -f macho64 test/zero.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/zero.run
+--- Assembly ---
+section .text
+global our_code_starts_here
+our_code_starts_here:
+  mov rax, 0
+  ret
+--- Output ---
+0
+
