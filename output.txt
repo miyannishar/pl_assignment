@@ -1,0 +1,57 @@
+(base) nishar@Mac boa % make test
+
+cargo run -- test/simple.snek test/simple.s
+    Updating crates.io index
+     Locking 8 packages to latest compatible versions
+   Compiling typenum v1.19.0
+   Compiling version_check v0.9.5
+   Compiling rand_core v0.6.4
+   Compiling sexp v1.1.4
+   Compiling rand_xoshiro v0.6.0
+   Compiling im v15.1.0
+   Compiling bitmaps v2.1.0
+   Compiling sized-chunks v0.6.5
+   Compiling boa v0.1.0 (/Users/nishar/Programming/pl_assignment/boa)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.95s
+     Running `target/debug/boa test/simple.snek test/simple.s`
+nasm -f macho64 test/simple.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/simple.run
+cargo run -- test/add.snek test/add.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/boa test/add.snek test/add.s`
+nasm -f macho64 test/add.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/add.run
+cargo run -- test/binop.snek test/binop.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/boa test/binop.snek test/binop.s`
+nasm -f macho64 test/binop.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/binop.run
+cargo run -- test/let_simple.snek test/let_simple.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/boa test/let_simple.snek test/let_simple.s`
+nasm -f macho64 test/let_simple.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/let_simple.run
+cargo run -- test/let_multi.snek test/let_multi.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/boa test/let_multi.snek test/let_multi.s`
+nasm -f macho64 test/let_multi.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/let_multi.run
+cargo run -- test/nested.snek test/nested.s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/boa test/nested.snek test/nested.s`
+nasm -f macho64 test/nested.s -o runtime/our_code.o
+ar rcs runtime/libour_code.a runtime/our_code.o
+rustc --target x86_64-apple-darwin -L runtime/ runtime/start.rs -o test/nested.run
+--- Running all tests ---
+simple               => 42
+add                  => 6
+binop                => 9
+let_simple           => 10
+let_multi            => 11
+nested               => 25
+(base) nishar@Mac boa % 
