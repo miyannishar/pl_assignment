@@ -29,9 +29,13 @@ TESTS = \
   let_multi \
   let_shadow
 
+# Runtime errors: compile to binary, run it, expect non-zero exit + "invalid argument"
 ERROR_TESTS = \
   err_add_bool \
-  err_equal_type_mismatch \
+  err_equal_type_mismatch
+
+# Compile-time errors: the compiler itself should exit non-zero (panic)
+COMPILE_ERROR_TESTS = \
   err_break_outside_loop
 
 .PRECIOUS: test/%.s
@@ -42,7 +46,11 @@ test: $(patsubst %, test/%.run, $(TESTS))
 	@pass=0; fail=0; \
 	for t in $(TESTS); do \
 		expected=$$(cat test/$$t.expected); \
-		got=$$(./test/$$t.run 2>/dev/null); \
+		if [ "$$t" = "input_num" ]; then \
+			got=$$(./test/$$t.run 7 2>/dev/null); \
+		else \
+			got=$$(./test/$$t.run 2>/dev/null); \
+		fi; \
 		if [ "$$got" = "$$expected" ]; then \
 			printf "  %-30s PASS\n" "$$t"; pass=$$((pass+1)); \
 		else \
@@ -50,6 +58,31 @@ test: $(patsubst %, test/%.run, $(TESTS))
 		fi; \
 	done; \
 	echo ""; echo "Passed: $$pass  Failed: $$fail"
+	@$(MAKE) test-errors
+
+# ── Run all error tests (must exit non-zero + print "invalid argument") ───────
+test-errors: $(patsubst %, test/%.run, $(ERROR_TESTS))
+	@echo "--- Running error tests ---"
+	@pass=0; fail=0; \
+	for t in $(ERROR_TESTS); do \
+		msg=$$(./test/$$t.run 2>&1); \
+		code=$$?; \
+		if [ $$code -ne 0 ] && echo "$$msg" | grep -q "invalid argument"; then \
+			printf "  %-30s PASS\n" "$$t"; pass=$$((pass+1)); \
+		else \
+			printf "  %-30s FAIL (exit=$$code, msg=$$msg)\n" "$$t"; fail=$$((fail+1)); \
+		fi; \
+	done; \
+	for t in $(COMPILE_ERROR_TESTS); do \
+		cargo run -- test/$$t.snek /dev/null 2>/dev/null; \
+		code=$$?; \
+		if [ $$code -ne 0 ]; then \
+			printf "  %-30s PASS\n" "$$t"; pass=$$((pass+1)); \
+		else \
+			printf "  %-30s FAIL (compiler should have rejected)\n" "$$t"; fail=$$((fail+1)); \
+		fi; \
+	done; \
+	echo ""; echo "Error tests passed: $$pass  Failed: $$fail"
 
 # ── Compile .snek → .s ──────────────────────────────────────────────────────
 test/%.s: test/%.snek src/main.rs
