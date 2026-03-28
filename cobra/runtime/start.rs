@@ -4,7 +4,7 @@ use std::env;
 
 #[link(name = "our_code")]
 extern "C" {
-    #[link_name = "\x01our_code_starts_here"]
+    
     fn our_code_starts_here(input: i64) -> i64;
 }
 

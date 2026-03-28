@@ -222,7 +222,7 @@ fn compile_expr(
     // We emit a single shared error handler per function call; we append it at
     // the end of our_code_starts_here (see main).  All type checks jump to the
     // global label `throw_error` which is defined once in the asm preamble.
-    let err_label = "throw_error";
+    let err_label = "_throw_error";
 
     match e {
         // ── Literals ──────────────────────────────────────────────────────
@@ -451,16 +451,16 @@ fn compile(e: &Expr) -> String {
     // the deepest stack usage stays aligned; 1024 bytes gives us plenty of room.
     format!(
         "section .text
-extern snek_error
-global our_code_starts_here
-our_code_starts_here:
+extern _snek_error
+global _our_code_starts_here
+_our_code_starts_here:
   sub rsp, 1024
 {body}
   add rsp, 1024
   ret
-throw_error:
+_throw_error:
   mov rdi, 1
-  call snek_error
+  call _snek_error
   ret
 "
     )
