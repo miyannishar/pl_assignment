@@ -1,0 +1,5 @@
+(fun (ping n)
+  (if (= n 0) 0 (pong (- n 1))))
+(fun (pong n)
+  (if (= n 0) 0 (ping (- n 1))))
+(ping 10)

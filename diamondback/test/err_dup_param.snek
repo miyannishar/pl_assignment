@@ -1,0 +1,2 @@
+(fun (bad x x) (+ x x))
+(bad 1)

@@ -1,0 +1,2 @@
+(fun (one) 1)
+(+ (one) (one))

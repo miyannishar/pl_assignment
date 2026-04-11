@@ -1,0 +1,2 @@
+(fun (forty_two) 42)
+(forty_two)

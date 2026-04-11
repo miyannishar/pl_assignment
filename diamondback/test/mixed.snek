@@ -1,0 +1,5 @@
+(fun (double x) (+ x x))
+(fun (inc_double x)
+  (let ((d (double x)))
+    (+ d 1)))
+(inc_double 4)

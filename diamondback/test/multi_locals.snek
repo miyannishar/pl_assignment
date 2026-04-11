@@ -1,0 +1,6 @@
+(fun (many x)
+  (let ((a (+ x 1))
+        (b (* x 2))
+        (c (- x 1)))
+    (+ (+ a b) c)))
+(many 5)

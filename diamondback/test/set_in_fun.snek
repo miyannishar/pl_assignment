@@ -1,0 +1,6 @@
+(fun (mutate x)
+  (let ((y x))
+    (block
+      (set! y (* y 2))
+      y)))
+(mutate 6)

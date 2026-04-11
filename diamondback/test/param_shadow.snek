@@ -1,0 +1,4 @@
+(fun (shadow x)
+  (let ((x (* x 3)))
+    x))
+(shadow 7)

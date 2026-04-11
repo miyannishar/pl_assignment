@@ -1,0 +1,5 @@
+/target
+/test/*.s
+/test/*.run
+/runtime/*.o
+/runtime/*.a
